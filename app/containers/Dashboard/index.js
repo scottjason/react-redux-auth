@@ -13,7 +13,6 @@ import messages from './messages';
 
 export class Dashboard extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
-    console.log(this.props);
     return (
       <div>
         <FormattedMessage {...messages.header} />

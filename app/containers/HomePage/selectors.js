@@ -43,7 +43,7 @@ const isValidPassword = () => createSelector(
 
 const user = () => createSelector(
   selectHome,
-  (homeState) => homeState.get('user')
+  (homeState) => homeState.get('user') || JSON.parse(localStorage.getItem('user'))
 )
 
 export {

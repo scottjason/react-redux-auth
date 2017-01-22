@@ -24,10 +24,9 @@ export function checkAuth() {
   };
 }
 
-export function authLoaded(user, isAuthenticated) {
+export function authLoaded(isAuthenticated) {
   return {
     type: AUTH_LOADED,
-    user: user,    
     isAuthenticated: isAuthenticated,
   };
 }

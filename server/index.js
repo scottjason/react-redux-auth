@@ -12,12 +12,13 @@ const resolve = require('path').resolve;
 const mongoose = require('mongoose');
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || require('../env').dbUri, () => {
   console.log('Database Connected');
 });
-
-app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./api')(app);
 

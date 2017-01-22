@@ -29,7 +29,6 @@ function homeReducer(state = initialState, action) {
   switch (action.type) {
     case AUTH_LOADED:
       return state
-        .set('user', action.user)
         .set('isAuthenticated', action.isAuthenticated);
     case CHANGE_EMAIL:
       return state

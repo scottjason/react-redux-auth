@@ -1,19 +1,31 @@
-import { take, fork, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { authLoaded, authErr, registerLoaded, registerErr, loginLoaded, loginErr } from './actions';
-import { email, password } from 'containers/HomePage/selectors';
+import { email, password, user } from 'containers/HomePage/selectors';
 import { CHECK_AUTH, LOGIN, REGISTER } from './constants';
 import request from 'utils/request';
 
 function* authReq() {
+
+  const u = yield select(user());
+  if (!u || !u.token) return;
   
   const requestURL = '/isAuthenticated';
-  
+  const requestOpts = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      token: u.token
+    })
+  }
+
   try {
-    const res = yield call(request, requestURL);
-    const user = res.user;
+    const res = yield call(request, requestURL, requestOpts);
     const isAuthenticated = res.isAuthenticated;
-    yield put(authLoaded(user, isAuthenticated));  
+    yield put(authLoaded(isAuthenticated));  
   } catch (err) {
+    console.log('err', err)
     yield put(authErr(err));
   }
 }
