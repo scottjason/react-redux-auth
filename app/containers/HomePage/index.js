@@ -55,9 +55,8 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         {this.props.isLoading &&
           <p> REQUEST IN PROGRESS </p>
         }
-        <Form 
-          onSubmit={this.props.onRegister}
-        >
+        
+        <Form onSubmit={this.props.onRegister} >
           <Input
             placeholder='Enter Email'
             type='email'
@@ -74,18 +73,21 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           }
           
           {!this.props.isLogin && 
-            <Button message={'REGISTER'} />
+            <Button message={'REGISTER'} 
+            onClick={this.props.toggleAuth}
+          />
           }
         </Form>
         
-        {this.props.isLogin && 
-          <P 
-          message={'Need an account?'} 
-          onClick={this.props.toggleAuth}
-        />
-        }
-          
-      
+        <div onClick={this.props.toggleAuth}>
+          {this.props.isLogin && 
+            <P message={'Need an account?'} />
+          }        
+          {!this.props.isLogin && 
+            <P message={'Have an account?'} />
+          }
+        </div>
+
       </CenteredSection>
     );
   }
@@ -93,7 +95,11 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
 
 
 HomePage.propTypes = {
+  checkAuth: React.PropTypes.func,
+  toggleAuth: React.PropTypes.func,
   onChangeEmail: React.PropTypes.func,
+  onChangePassword: React.PropTypes.func,
+  onRegister: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
