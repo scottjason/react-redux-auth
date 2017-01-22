@@ -1,0 +1,1 @@
+React, Redux Auth using Maximilian Stoiber's [boilerplate](https://github.com/mxstbr/react-boilerplate/):
