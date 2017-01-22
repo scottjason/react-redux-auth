@@ -10,9 +10,12 @@ import {
   TOGGLE_AUTH,
   CHANGE_EMAIL,
   CHANGE_PASSWORD,
+  LOGIN,
   REGISTER,
   REGISTER_LOADED,
+  LOGIN_LOADED,
   REGISTER_ERROR,
+  LOGIN_ERROR,
 } from './constants';
 
 export function checkAuth() {
@@ -78,6 +81,26 @@ export function registerLoaded(user) {
 export function registerErr(err) {
   return {
     type: REGISTER_ERROR,
+    err: err
+  };
+}
+
+export function login() {
+  return {
+    type: LOGIN
+  };
+}
+
+export function loginLoaded(user) {
+  return {
+    type: LOGIN_LOADED,
+    user: user
+  };
+}
+
+export function loginErr(err) {
+  return {
+    type: LOGIN_ERROR,
     err: err
   };
 }

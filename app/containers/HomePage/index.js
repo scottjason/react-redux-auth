@@ -22,6 +22,7 @@ import CenteredSection from './CenteredSection';
 import { 
   changeEmail, 
   changePassword, 
+  login,
   register, 
   toggleLoader, 
   checkAuth,
@@ -56,7 +57,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           <p> REQUEST IN PROGRESS </p>
         }
         
-        <Form onSubmit={this.props.onRegister} >
+        <Form onSubmit={this.props.isLogin ? this.props.onLogin : this.props.onRegister} >
           <Input
             placeholder='Enter Email'
             type='email'
@@ -112,6 +113,11 @@ export function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(toggleLoader());
       dispatch(register());
+    },    
+    onLogin: (evt) => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(toggleLoader());
+      dispatch(login());
     }
   };
 }

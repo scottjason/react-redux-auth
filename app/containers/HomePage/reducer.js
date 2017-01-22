@@ -11,7 +11,9 @@ import {
   CHANGE_EMAIL,
   CHANGE_PASSWORD,
   REGISTER_LOADED,
+  LOGIN_LOADED,
   REGISTER_ERROR,
+  LOGIN_ERROR
 } from './constants';
 
 const initialState = fromJS({
@@ -46,6 +48,11 @@ function homeReducer(state = initialState, action) {
       return state
         .set('isLogin', val);
     case REGISTER_LOADED:
+      return state
+        .set('isLoading', false)
+        .set('isAuthenticated', true)
+        .set('user', action.user);    
+    case LOGIN_LOADED:
       return state
         .set('isLoading', false)
         .set('isAuthenticated', true)

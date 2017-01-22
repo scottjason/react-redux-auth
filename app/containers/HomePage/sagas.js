@@ -1,7 +1,7 @@
 import { take, fork, call, put, select, cancel, takeLatest } from 'redux-saga/effects';
-import { authLoaded, authErr, registerLoaded, registerErr } from './actions';
+import { authLoaded, authErr, registerLoaded, registerErr, loginLoaded, loginErr } from './actions';
 import { email, password } from 'containers/HomePage/selectors';
-import { CHECK_AUTH, REGISTER } from './constants';
+import { CHECK_AUTH, LOGIN, REGISTER } from './constants';
 import request from 'utils/request';
 
 function* authReq() {
@@ -32,6 +32,24 @@ function* registerReq() {
   }  
 }
 
+function* loginReq() {
+
+  const e = yield select(email());
+  const p = yield select(password());
+  const requestURL = `/login?email=${e}&password=${p}`;
+
+  try {
+    const res = yield call(request, requestURL);
+    yield put(loginLoaded(res.user));  
+  } catch (err) {
+    yield put(loginErr(err));
+  }  
+}
+
+function* loginWatch() {
+  const watcher = yield takeLatest(LOGIN, loginReq);
+}
+
 function* registerWatch() {
   const watcher = yield takeLatest(REGISTER, registerReq);
 }
@@ -42,5 +60,6 @@ function* authWatch() {
 
 export default [
   authWatch,
+  loginWatch,
   registerWatch,
 ];
