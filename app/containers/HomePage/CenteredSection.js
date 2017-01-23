@@ -7,7 +7,7 @@ const CenteredSection = styled.section`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 250px;
   left: 0;
   right: 0;
   top: 0;

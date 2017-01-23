@@ -1,12 +1,12 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { authLoaded, authErr, registerLoaded, registerErr, loginLoaded, loginErr } from './actions';
-import { email, password, user } from 'containers/HomePage/selectors';
-import { CHECK_AUTH, LOGIN, REGISTER } from './constants';
 import request from 'utils/request';
+import * as actions from './actions';
+import { CHECK_AUTH, LOGIN, REGISTER } from './constants';
+import * as selectors from 'containers/HomePage/selectors';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 function* authReq() {
 
-  const u = yield select(user());
+  const u = yield select(selectors.user());
   if (!u || !u.token) return;
   
   const requestURL = '/isAuthenticated';
@@ -22,39 +22,46 @@ function* authReq() {
 
   try {
     const res = yield call(request, requestURL, requestOpts);
-    const isAuthenticated = res.isAuthenticated;
-    yield put(authLoaded(isAuthenticated));  
+    yield put(actions.authLoaded(res.isAuthenticated));
   } catch (err) {
     console.log('err', err)
-    yield put(authErr(err));
+    yield put(actions.authErr(err));
   }
 }
 
 function* registerReq() {
+  
+  const isValidEmail = yield select(selectors.isValidEmail());
+  const isValidPassword = yield select(selectors.isValidPassword());
+  
+  if (!isValidEmail || !isValidPassword) {
+    yield put(actions.authErr({ message: 'Invalid Credentials' }));
+  } else {
+    
+    const e = yield select(selectors.email());
+    const p = yield select(selectors.password());
+    const requestURL = `/register?email=${e}&password=${p}`;
 
-  const e = yield select(email());
-  const p = yield select(password());
-  const requestURL = `/register?email=${e}&password=${p}`;
-
-  try {
-    const res = yield call(request, requestURL);
-    yield put(registerLoaded(res.user));  
-  } catch (err) {
-    yield put(registerErr(err));
+    try {
+      const res = yield call(request, requestURL);
+      yield put(actions.registerLoaded(res.user));  
+    } catch (err) {
+      yield put(actions.authErr(err));
+    }  
   }  
 }
 
 function* loginReq() {
 
-  const e = yield select(email());
-  const p = yield select(password());
+  const e = yield select(selectors.email());
+  const p = yield select(selectors.password());
   const requestURL = `/login?email=${e}&password=${p}`;
 
   try {
     const res = yield call(request, requestURL);
-    yield put(loginLoaded(res.user));  
+    yield put(actions.loginLoaded(res.user));  
   } catch (err) {
-    yield put(loginErr(err));
+    yield put(actions.authErr(err));
   }  
 }
 

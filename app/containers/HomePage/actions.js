@@ -2,105 +2,76 @@
  * Home Actions
 */
 
-import {
-  AUTH_LOADED,
-  AUTH_ERR,
-  CHECK_AUTH,
-  TOGGLE_LOADER,
-  TOGGLE_AUTH,
-  CHANGE_EMAIL,
-  CHANGE_PASSWORD,
-  LOGIN,
-  REGISTER,
-  REGISTER_LOADED,
-  LOGIN_LOADED,
-  REGISTER_ERROR,
-  LOGIN_ERROR,
-} from './constants';
-
-export function checkAuth() {
-  return {
-    type: CHECK_AUTH,
-  };
-}
-
-export function authLoaded(isAuthenticated) {
-  return {
-    type: AUTH_LOADED,
-    isAuthenticated: isAuthenticated,
-  };
-}
-
-export function authErr(err) {
-  return {
-    type: AUTH_ERR,
-    err: err
-  };
-}
-
-export function toggleLoader() {
-  return {
-    type: TOGGLE_LOADER,
-  };
-}
-
-export function toggleAuth() {
-  return {
-    type: TOGGLE_AUTH,
-  };
-}
+import * as constants from './constants';
 
 export function changeEmail(email) {
   return {
-    type: CHANGE_EMAIL,
+    type: constants.CHANGE_EMAIL,
     email,
   };
 }
 
 export function changePassword(password) {
   return {
-    type: CHANGE_PASSWORD,
+    type: constants.CHANGE_PASSWORD,
     password,
+  };
+}
+
+export function checkAuth() {
+  return {
+    type: constants.CHECK_AUTH,
+  };
+}
+
+export function authLoaded(isAuthenticated) {
+  return {
+    type: constants.AUTH_LOADED,
+    isAuthenticated: isAuthenticated,
+  };
+}
+
+export function authErr(err) {
+  return {
+    type: constants.AUTH_ERR,
+    message: err.message
+  };
+}
+
+export function toggleLoader() {
+  return {
+    type: constants.TOGGLE_LOADER,
+  };
+}
+
+export function toggleAuth() {
+  return {
+    type: constants.TOGGLE_AUTH,
   };
 }
 
 export function register() {
   return {
-    type: REGISTER
+    type: constants.REGISTER
   };
 }
 
 export function registerLoaded(user) {
   return {
-    type: REGISTER_LOADED,
+    type: constants.REGISTER_LOADED,
     user: user
-  };
-}
-
-export function registerErr(err) {
-  return {
-    type: REGISTER_ERROR,
-    err: err
   };
 }
 
 export function login() {
   return {
-    type: LOGIN
+    type: constants.LOGIN
   };
 }
 
 export function loginLoaded(user) {
   return {
-    type: LOGIN_LOADED,
+    type: constants.LOGIN_LOADED,
     user: user
   };
 }
-
-export function loginErr(err) {
-  return {
-    type: LOGIN_ERROR,
-    err: err
-  };
-}
-

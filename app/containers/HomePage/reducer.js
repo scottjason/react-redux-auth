@@ -3,22 +3,12 @@
 */
 
 import { fromJS } from 'immutable';
-
-import {
-  AUTH_LOADED,
-  TOGGLE_LOADER,
-  TOGGLE_AUTH,
-  CHANGE_EMAIL,
-  CHANGE_PASSWORD,
-  REGISTER_LOADED,
-  LOGIN_LOADED,
-  REGISTER_ERROR,
-  LOGIN_ERROR
-} from './constants';
+import * as constants from './constants';
 
 const initialState = fromJS({
   email: '',
   password: '',
+  authErr: null,
   isLogin: true,
   isValidEmail: false,
   isValidPassword: false,
@@ -27,35 +17,38 @@ const initialState = fromJS({
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case AUTH_LOADED:
-      return state
-        .set('isAuthenticated', action.isAuthenticated);
-    case CHANGE_EMAIL:
+    case constants.CHANGE_EMAIL:
       return state
         .set('email', action.email)
         .set('isValidEmail', isValidEmail(action.email));
-    case CHANGE_PASSWORD:
+    case constants.CHANGE_PASSWORD:
       return state
         .set('password', action.password)
         .set('isValidPassword', isValidPassword(action.password));
-    case TOGGLE_LOADER:
-      var val = !state.get('isLoading');
+    case constants.TOGGLE_LOADER:
       return state
-        .set('isLoading', val);    
-    case TOGGLE_AUTH:
-      var val = !state.get('isLogin');
+        .set('isLoading', !state.get('isLoading'));
+    case constants.AUTH_LOADED:
       return state
-        .set('isLogin', val);
-    case REGISTER_LOADED:
+        .set('isAuthenticated', action.isAuthenticated);    
+    case constants.TOGGLE_AUTH:
+      return state
+        .set('isLogin', !state.get('isLogin'));
+    case constants.REGISTER_LOADED:
       return state
         .set('isLoading', false)
         .set('isAuthenticated', true)
         .set('user', action.user);    
-    case LOGIN_LOADED:
+    case constants.LOGIN_LOADED:
       return state
         .set('isLoading', false)
         .set('isAuthenticated', true)
-        .set('user', action.user);
+        .set('user', action.user);    
+    case constants.AUTH_ERR:
+      console.log("authErr hit", action)
+      return state
+        .set('isLoading', false)
+        .set('authErr', action.message);
     default:
       return state;
   }

@@ -15,15 +15,16 @@ import { connect } from 'react-redux';
 
 import Form from './Form';
 import Input from './Input';
+import ErrMessage from './ErrMessage';
 import Button from 'components/Button';
 import P from 'components/P';
 import CenteredSection from './CenteredSection';
 
 import { 
-  changeEmail, 
-  changePassword, 
   login,
-  register, 
+  register,
+  changeEmail,
+  changePassword,
   toggleLoader, 
   checkAuth,
   toggleAuth,
@@ -33,11 +34,10 @@ import {
   user,
   email, 
   password, 
-  isValidEmail, 
-  isValidPassword, 
+  isLogin,
   isLoading,
   isAuthenticated,
-  isLogin
+  authErr,
 } from './selectors';
 
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -45,62 +45,50 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
     this.props.checkAuth();
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.isAuthenticated) {
+    if (nextProps.user && nextProps.isAuthenticated) {
       localStorage.setItem('user', JSON.stringify(nextProps.user));
       this.props.router.push('/dashboard');
     }
   }
   render() {
+    if (this.props.authErr) {
+      console.log(this.props)
+    }
     return (
       <CenteredSection>
-        {this.props.isLoading &&
-          <p> REQUEST IN PROGRESS </p>
-        }
         
         <Form onSubmit={this.props.isLogin ? this.props.onLogin : this.props.onRegister} >
           <Input
             placeholder='Enter Email'
-            type='email'
+            type='text'
             onChange={this.props.onChangeEmail}
           />        
           <Input
             placeholder='Enter Password'
             type='password'
             onChange={this.props.onChangePassword}
-          />
-    
-          {this.props.isLogin && 
-            <Button message={'LOGIN'} />
-          }
-          
-          {!this.props.isLogin && 
-            <Button message={'REGISTER'} 
-            onClick={this.props.toggleAuth}
-          />
-          }
+          />    
+          <Button message={this.props.isLogin ? 'LOGIN' : 'REGISTER'} />
         </Form>
         
         <div onClick={this.props.toggleAuth}>
-          {this.props.isLogin && 
-            <P message={'Need an account?'} />
-          }        
-          {!this.props.isLogin && 
-            <P message={'Have an account?'} />
-          }
+          <P message={this.props.isLogin ? 'Need an account?' : 'Have an account?'} />
+        />
         </div>
-
+        
+        {this.props.authErr &&
+          <ErrMessage>{this.props.authErr}</ErrMessage>
+        }
       </CenteredSection>
     );
   }
 }
-
 
 HomePage.propTypes = {
   checkAuth: React.PropTypes.func,
   toggleAuth: React.PropTypes.func,
   onChangeEmail: React.PropTypes.func,
   onChangePassword: React.PropTypes.func,
-  onRegister: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -109,15 +97,15 @@ export function mapDispatchToProps(dispatch) {
     toggleAuth: () => dispatch(toggleAuth()),
     onChangeEmail: (evt) => dispatch(changeEmail(evt.target.value)),
     onChangePassword: (evt) => dispatch(changePassword(evt.target.value)),
-    onRegister: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(toggleLoader());
-      dispatch(register());
-    },    
     onLogin: (evt) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(toggleLoader());
       dispatch(login());
+    },
+    onRegister: (evt) => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(toggleLoader());
+      dispatch(register());
     }
   };
 }
@@ -125,10 +113,9 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   user: user(),
   email: email(),
+  authErr: authErr(),
   isLogin: isLogin(),
   password: password(),
-  isValidEmail: isValidEmail(),
-  isValidPassword: isValidPassword(),
   isLoading: isLoading(),
   isAuthenticated: isAuthenticated()
 });

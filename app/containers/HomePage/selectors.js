@@ -46,8 +46,14 @@ const user = () => createSelector(
   (homeState) => homeState.get('user') || JSON.parse(localStorage.getItem('user'))
 )
 
+const authErr = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('authErr')
+)
+
 export {
   user,
+  authErr,
   isLogin,
   isAuthenticated,
   isLoading,  
